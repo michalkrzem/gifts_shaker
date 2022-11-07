@@ -25,6 +25,10 @@ def register_page(request):
 
 
 def login_page(request):
+    """
+    TODO: Set email as a login field - not username
+    TODO: Create AbstractUser, CustomManager, CustomAdminManager
+    """
     if request.user.is_authenticated:
         return redirect('home')
     else:
@@ -32,9 +36,7 @@ def login_page(request):
         if request.method == 'POST':
             username = request.POST.get('username')
             password = request.POST.get('password1')
-            print(username, password)
             user = authenticate(request, username=username, password=password)
-            print(user)
             if user is not None:
                 login(request, user)
                 return redirect('home')

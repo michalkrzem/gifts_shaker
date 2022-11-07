@@ -6,12 +6,6 @@ from django import forms
 
 
 class CreateUserForm(UserCreationForm):
-    email = forms.EmailField(
-        max_length=100,
-        required=True,
-        help_text='Enter Email Address',
-        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Email'}),
-    )
     first_name = forms.CharField(
         max_length=100,
         required=True,
@@ -24,17 +18,11 @@ class CreateUserForm(UserCreationForm):
         help_text='Enter Last Name',
         widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Last Name'}),
     )
-    container = forms.CharField(
-        max_length=200,
-        required=False,
-        help_text='Enter Group name',
-        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Container Name'}),
-    )
-    username = forms.CharField(
-        max_length=200,
+    username = forms.EmailField(
+        max_length=100,
         required=True,
-        help_text='Enter Username',
-        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Username'}),
+        help_text='Enter Email Address',
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Email'}),
     )
     password1 = forms.CharField(
         help_text='Enter Password',
@@ -49,4 +37,4 @@ class CreateUserForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ['username', 'email', 'first_name', 'last_name', 'password1', 'password2']
+        fields = ['username', 'first_name', 'last_name', 'password1', 'password2']
