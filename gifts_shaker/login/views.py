@@ -30,10 +30,10 @@ def login_page(request):
     else:
         form = CreateUserForm(request.POST)
         if request.method == 'POST':
-            email = request.POST.get('email')
+            username = request.POST.get('username')
             password = request.POST.get('password1')
-            print(email, password)
-            user = authenticate(request, username=email, password=password)
+            print(username, password)
+            user = authenticate(request, username=username, password=password)
             print(user)
             if user is not None:
                 login(request, user)

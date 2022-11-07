@@ -32,7 +32,7 @@ class CreateUserForm(UserCreationForm):
     )
     username = forms.CharField(
         max_length=200,
-        required=False,
+        required=True,
         help_text='Enter Username',
         widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Username'}),
     )
