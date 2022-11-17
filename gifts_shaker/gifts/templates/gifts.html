@@ -1,0 +1,46 @@
+{% extends "home.html" %}
+
+
+
+{% block content %}
+
+
+<div class="row">
+	<div class="col-md">
+		<div class="card card-body">
+			<table class="table table-striped">
+ <thead>
+				<tr>
+					<th scope="col"></th>
+					<th>Nazwa</th>
+					<th>Cena</th>
+					<th>Link</th>
+					<th colspan="2"><a class="btn btn-sm btn-info" href="/gifts/new_gift">Dodaj nowy prezent</a></th>
+
+				</tr>
+  </thead>
+	  <tbody>
+
+				{% for gift in gift %}
+
+				<tr>
+					<th scope="row"></th>
+					<td>{{gift.name}}</td>
+					<td>{{gift.price}}</td>
+					<td>{{gift.link}}</td>
+
+					<td><a class="btn btn-sm btn-info" href="">Update</a></td>
+
+					<td><a class="btn btn-sm btn-danger" href="">Delete</a></td>
+				</tr>
+				{% endfor %}
+  </tbody>
+
+			</table>
+		</div>
+	</div>
+</div>
+
+
+{% endblock %}
+
