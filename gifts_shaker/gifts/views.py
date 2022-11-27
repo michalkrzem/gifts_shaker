@@ -30,38 +30,12 @@ def new_gift(request):
             gift = form.save(commit=False)
             gift.author_id = author
             gift.save()
-
             return redirect('all_gifts')
 
     formset = CreateGift()
+    for i in formset:
+        print(i)
     context = {'form': formset}
 
     return render(request, 'add_gift.html', context)
-
-#
-# @login_required(login_url='save_gift')
-# def save_gift(request):
-#     author = User.objects.get(id=request.user.id)
-#
-#     if request.method == 'POST':
-#         form = CreateGift(request.POST, instance=author)
-#         for i in form:
-#             print(i)
-#         if form.is_valid():
-#             form.save()
-#             print('saved')
-#             return redirect('all_gifts')
-#             # return gifts(request)
-#         else:
-#             print(' something is wrong')
-#     # g = Gifts(
-#     #     name=request.POST.get('name'),
-#     #     price=request.POST.get('price'),
-#     #     link=request.POST.get('link'),
-#     #     author_id=request.user.id
-#     # )
-#     #
-#     # g.save()
-#
-
 

@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'login',
-    'gifts'
+    'gifts',
+    'widget_tweaks',
     # 'login.apps.LoginConfig',
 
 ]
@@ -67,6 +68,9 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
+            'libraries': {
+                'url_target_blank': 'gifts.templatetags.url_target_blank',
+            }
         },
     },
 ]

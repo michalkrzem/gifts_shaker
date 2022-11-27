@@ -8,6 +8,13 @@ from .models import Gifts
 
 
 class CreateGift(ModelForm):
+    name = forms.CharField(
+        label='Nazwa prezentu'
+    )
+    price = forms.DecimalField(
+        label='Podaj cenę'
+    )
+
     class Meta:
         model = Gifts
         fields = ['name', 'price', 'link']

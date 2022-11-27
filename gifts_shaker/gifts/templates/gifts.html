@@ -1,15 +1,16 @@
 {% extends "home.html" %}
+{% load url_target_blank %}
 
 
 
 {% block content %}
 
 
-<div class="row">
+<div class="row" style="padding-left:2%; padding-right:20%">
 	<div class="col-md">
 		<div class="card card-body">
 			<table class="table table-striped">
- <thead>
+ 			<thead>
 				<tr>
 					<th scope="col"></th>
 					<th>Nazwa</th>
@@ -18,7 +19,7 @@
 					<th colspan="2"><a class="btn btn-sm btn-info" href="/gifts/new_gift">Dodaj nowy prezent</a></th>
 
 				</tr>
-  </thead>
+  			</thead>
 	  <tbody>
 
 				{% for gift in gift %}
@@ -27,7 +28,7 @@
 					<th scope="row"></th>
 					<td>{{gift.name}}</td>
 					<td>{{gift.price}}</td>
-					<td>{{gift.link}}</td>
+					<td>{{gift.link|urlizetrunc:15|url_target_blank}}</td>
 
 					<td><a class="btn btn-sm btn-info" href="">Update</a></td>
 
