@@ -1,0 +1,44 @@
+{% extends "home.html" %}
+{% load url_target_blank %}
+
+
+
+{% block content %}
+
+
+<div class="row" style="padding-left:2%; padding-right:20%">
+	<div class="col-md">
+		<div class="card card-body">
+			<table class="table table-striped">
+ 			<thead>
+				<tr>
+					<th scope="col"></th>
+					<th>Nazwa Shakera</th>
+					<th>Zaproszone osoby</th>
+					<th colspan="2"><a class="btn btn-sm btn-info" href="/gifts/new_gift">Dodaj nowy shaker</a></th>
+
+				</tr>
+  			</thead>
+	  <tbody>
+
+				{% for shaker in shakers %}
+
+				<tr>
+					<th scope="row"></th>
+					<td>{{shaker.shaker_name}}</td>
+					<td>{{shaker.group_members}}</td>
+					<td><a class="btn btn-sm btn-info" href="">Update</a></td>
+
+					<td><a class="btn btn-sm btn-danger" href="">Delete</a></td>
+				</tr>
+				{% endfor %}
+  </tbody>
+
+			</table>
+		</div>
+	</div>
+</div>
+
+
+{% endblock %}
+

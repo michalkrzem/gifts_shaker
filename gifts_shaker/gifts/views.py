@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 
 # Create your views here.
-from gifts.models import Gifts
+from gifts.models import Gifts, Shakers
 from gifts.forms import CreateGift
 
 
@@ -39,3 +39,10 @@ def new_gift(request):
 
     return render(request, 'add_gift.html', context)
 
+
+@login_required(login_url='all_shakers')
+def shakers(request):
+
+    shakers_data = Shakers.objects.all()
+
+    return render(request, 'shakers.html', {'shakers': shakers_data})
