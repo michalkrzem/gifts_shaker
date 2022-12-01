@@ -13,23 +13,21 @@
  			<thead>
 				<tr>
 					<th scope="col"></th>
-					<th>Nazwa Shakera</th>
-					<th>Zaproszone osoby</th>
-					<th colspan="2"><a class="btn btn-sm btn-info" href="/gifts/new_gift">Stwórz nowy shaker</a></th>
+					<th>Email</th>
+					<th>Czy się zarejestrował</th>
+					<th colspan="2"><a class="btn btn-sm btn-info" href="/gifts/invite">Zaproś nową osobę</a></th>
 
 				</tr>
   			</thead>
 	  <tbody>
 
-				{% for shaker in shakers %}
+				{% for invite in invitations %}
 
 				<tr>
 					<th scope="row"></th>
-					<td>{{shaker.shaker_name}}</td>
-					<td>{{shaker.group_members}}</td>
-					<td><a class="btn btn-sm btn-info" href="">Update</a></td>
-
-					<td><a class="btn btn-sm btn-danger" href="">Delete</a></td>
+					<td>{{invite.email}}</td>
+					<td>{{invite.accepted}}</td>
+					<td><a class="btn btn-sm btn-danger" href="{% url 'delete_invitation' invite.id %}">Delete</a></td>
 				</tr>
 				{% endfor %}
   </tbody>
