@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect
 
 # Create your views here.
 from gifts.models import Gift, Shaker, Invitation
-from gifts.forms import CreateGift, CreateInvitation, DeleteInvitation, DeleteGift
+from gifts.forms import CreateGift, CreateInvitation, DeleteInvitation, DeleteGift, CreateShaker
 
 
 @login_required(login_url='')
@@ -48,7 +48,7 @@ def update_gift(request, pk):
 
 
 @login_required(login_url='new_gift')
-def new_gift(request):
+def create_gift(request):
     author = User.objects.get(id=request.user.id)
 
     if request.method == 'POST':
@@ -113,3 +113,20 @@ def shakers(request):
     shakers_data = Shaker.objects.filter(owner=request.user.id)
 
     return render(request, 'shakers.html', {'shakers': shakers_data})
+
+
+@login_required(login_url='new_shaker')
+def create_shaker(request):
+    owner = User.objects.get(id=request.user.id)
+
+    if request.method == 'POST':
+        form = CreateShaker(request.POST)
+        if form.is_valid():
+            shaker = form.save(commit=False)
+            shaker.owner = owner
+            shaker.save()
+            return redirect('all_shakers')
+
+    formset = CreateShaker()
+
+    return render(request, 'new_shaker.html', {'form': formset})

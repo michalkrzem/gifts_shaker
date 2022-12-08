@@ -14,8 +14,7 @@
 				<tr>
 					<th scope="col"></th>
 					<th>Nazwa Shakera</th>
-					<th>Zaproszone osoby</th>
-					<th colspan="2"><a class="btn btn-sm btn-info" href="/gifts/new_gift">Stwórz nowy shaker</a></th>
+					<th colspan="2"><a class="btn btn-sm btn-info" href="/gifts/new_shaker">Stwórz nowy shaker</a></th>
 
 				</tr>
   			</thead>
@@ -26,9 +25,8 @@
 				<tr>
 					<th scope="row"></th>
 					<td>{{shaker.shaker_name}}</td>
-					<td>{{shaker.group_members}}</td>
+					<td><a class="btn btn-sm btn-info" href="">View</a></td>
 					<td><a class="btn btn-sm btn-info" href="">Update</a></td>
-
 					<td><a class="btn btn-sm btn-danger" href="">Delete</a></td>
 				</tr>
 				{% endfor %}
