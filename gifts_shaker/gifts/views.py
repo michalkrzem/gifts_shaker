@@ -110,7 +110,8 @@ def delete_invitation(request, pk):
 @login_required(login_url='all_shakers')
 def shakers(request):
 
-    shakers_data = Shaker.objects.filter(owner=request.user.id)
+    # shakers_data = Shaker.objects.filter(user_in_shake=request.user.id)
+    shakers_data = Shaker.objects.all()
 
     return render(request, 'shakers.html', {'shakers': shakers_data})
 
@@ -122,9 +123,10 @@ def create_shaker(request):
     if request.method == 'POST':
         form = CreateShaker(request.POST)
         if form.is_valid():
-            shaker = form.save(commit=False)
-            shaker.owner = owner
-            shaker.save()
+
+            shaker = form.save()
+            shaker.user_in_shake.add(owner)
+
             return redirect('all_shakers')
 
     formset = CreateShaker()
