@@ -8,6 +8,7 @@ urlpatterns = [
     path('all_gifts', views.gifts, name="all_gifts"),
     path('all_shakers', views.shakers, name="all_shakers"),
     path('new_shaker', views.create_shaker, name="new_shaker"),
+    path('new_shaker/add_person/<str:pk>/', views.add_person_to_shaker, name="add_person"),
     path('new_gift', views.create_gift, name="new_gift"),
     # path('invite', views.new_gift, name="new_gift"),
     path('invite', views.create_invitation, name="invite"),

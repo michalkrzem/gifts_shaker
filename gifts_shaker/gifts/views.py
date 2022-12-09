@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect
 
 # Create your views here.
 from gifts.models import Gift, Shaker, Invitation
-from gifts.forms import CreateGift, CreateInvitation, DeleteInvitation, DeleteGift, CreateShaker
+from gifts.forms import CreateGift, CreateInvitation, DeleteInvitation, DeleteGift, CreateShaker, AddPersonToShaker
 
 
 @login_required(login_url='')
@@ -110,9 +110,9 @@ def delete_invitation(request, pk):
 @login_required(login_url='all_shakers')
 def shakers(request):
 
-    # shakers_data = Shaker.objects.filter(user_in_shake=request.user.id)
-    shakers_data = Shaker.objects.all()
-
+    shakers_data = Shaker.objects.filter(user_in_shake=request.user.id)
+    # shakers_data = Shaker.objects.all()
+    #
     return render(request, 'shakers.html', {'shakers': shakers_data})
 
 
@@ -132,3 +132,18 @@ def create_shaker(request):
     formset = CreateShaker()
 
     return render(request, 'new_shaker.html', {'form': formset})
+
+
+@login_required(login_url='add_person')
+def add_person_to_shaker(request, pk):
+    form = AddPersonToShaker()
+    shaker = Shaker.objects.get(id=pk)
+
+    if request.method == 'POST':
+        person = User.objects.get(username=request.POST.get('username'))
+        shaker.user_in_shake.add(person)
+
+    users = shaker.user_in_shake.all()
+    context = {'form': form, 'users': users}
+
+    return render(request, 'invite_into_shaker.html', context)

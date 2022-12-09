@@ -50,3 +50,13 @@ class CreateShaker(ModelForm):
     class Meta:
         model = Shaker
         fields = ['shaker_name']
+
+
+class AddPersonToShaker(ModelForm):
+    user = forms.EmailField(
+        label='Wpisz email'
+    )
+
+    class Meta:
+        model = User
+        fields = ['username']
