@@ -1,9 +1,13 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.db.backends.utils import logger
 from django.shortcuts import render, redirect
 
+import random
+import itertools
+
 # Create your views here.
-from gifts.models import Gift, Shaker, Invitation
+from gifts.models import Gift, Shaker, Invitation, Pairs
 from gifts.forms import CreateGift, CreateInvitation, DeleteInvitation, DeleteGift, CreateShaker, AddPersonToShaker
 
 
@@ -85,7 +89,6 @@ def create_invitation(request):
 
 @login_required(login_url='all_invitations')
 def invitations(request):
-
     invitations_data = Invitation.objects.filter(owner=request.user.id)
 
     return render(request, 'invitations.html', {'invitations': invitations_data})
@@ -109,7 +112,6 @@ def delete_invitation(request, pk):
 
 @login_required(login_url='all_shakers')
 def shakers(request):
-
     shakers_data = Shaker.objects.filter(user_in_shake=request.user.id)
     # shakers_data = Shaker.objects.all()
     #
@@ -123,7 +125,6 @@ def create_shaker(request):
     if request.method == 'POST':
         form = CreateShaker(request.POST)
         if form.is_valid():
-
             shaker = form.save()
             shaker.user_in_shake.add(owner)
 
@@ -147,3 +148,56 @@ def add_person_to_shaker(request, pk):
     context = {'form': form, 'users': users}
 
     return render(request, 'invite_into_shaker.html', context)
+
+
+@login_required(login_url='shake')
+def shake(request, pk):
+    checked = {}
+    shaker = Shaker.objects.get(id=pk)
+    users = list(shaker.user_in_shake.all())
+    random.shuffle(users)
+
+    while len(checked.keys()) < len(users):
+        permutation = list(itertools.permutations(users, 2))
+        random.shuffle(permutation)
+
+        for i in permutation:
+            if i[1] not in checked.values():
+                checked.update(dict([i]))
+
+    if len(checked.values()) != len(set(checked.values())):
+        print(len(checked.values()), len(set(checked.values())))
+        print('dupliakters eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee')
+    if len(users) != len(checked):
+        print('dlugosc cccccccccccccccccccccccccccccccccccccccccccccccccccc')
+    from django.http import HttpResponse
+    for i in checked:
+        pair = Pairs(user_1=i, user_2=checked[i], shaker=shaker)
+        # pair.save()
+        try:
+            pair.save()
+        except Exception as e:
+            logger.error(e.__str__())
+            return HttpResponse('Shaker już wymieszany')
+    return render(request, 'shakers.html')
+
+
+@login_required(login_url='gifts_of_all_users')
+def gifts_of_all_users(request, pk):
+    gifts_data = Gift.objects.all()
+
+    return render(request, 'gifts_of_all.html', {'gift': gifts_data})
+
+
+@login_required(login_url='gifts_of_shaked_users')
+def gifts_of_shaked_users(request, pk):
+    print(request.user.id, pk)
+    shaked_user = Pairs.objects.filter(user_1=request.user.id).filter(shaker=pk)
+
+    for i in shaked_user:
+        print(i.return_user_2)
+    print(shaked_user[0].user_2)
+
+    gifts_data = Gift.objects.filter(author_id=shaked_user[0].user_2)
+
+    return render(request, 'gifts_of_shaked_user.html', {'gift': gifts_data})
