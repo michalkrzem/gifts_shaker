@@ -23,11 +23,12 @@
   			</thead>
 	  <tbody>
 
-				{% for gift in gift %}
+				{% for gift in gifts %}
+
 
 				<tr>
 					<th scope="row"></th>
-					<td>{{gift}}</td>
+					<td>{{gift.author_id}}</td>
 					<td>{{gift.name}}</td>
 					<td>{{gift.price}}</td>
 					<td>{{gift.link|urlizetrunc:15|url_target_blank}}</td>

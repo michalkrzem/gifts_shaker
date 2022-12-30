@@ -2,13 +2,15 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.db.backends.utils import logger
 from django.shortcuts import render, redirect
+from django.http import HttpResponse
 
 import random
 import itertools
 
 # Create your views here.
 from gifts.models import Gift, Shaker, Invitation, Pairs
-from gifts.forms import CreateGift, CreateInvitation, DeleteInvitation, DeleteGift, CreateShaker, AddPersonToShaker
+from gifts.forms import CreateGift, CreateInvitation, DeleteInvitation, \
+    DeleteGift, CreateShaker, AddPersonToShaker, ShakersForm
 
 
 @login_required(login_url='')
@@ -112,9 +114,9 @@ def delete_invitation(request, pk):
 
 @login_required(login_url='all_shakers')
 def shakers(request):
-    shakers_data = Shaker.objects.filter(user_in_shake=request.user.id)
-    # shakers_data = Shaker.objects.all()
-    #
+    shakers_data = Shaker.objects.filter(user_in_shake=request.user.id).values()
+    for i in shakers_data:
+        print(i)
     return render(request, 'shakers.html', {'shakers': shakers_data})
 
 
@@ -126,6 +128,8 @@ def create_shaker(request):
         form = CreateShaker(request.POST)
         if form.is_valid():
             shaker = form.save()
+            shaker.owner = request.user.id
+            shaker.save()
             shaker.user_in_shake.add(owner)
 
             return redirect('all_shakers')
@@ -165,39 +169,21 @@ def shake(request, pk):
             if i[1] not in checked.values():
                 checked.update(dict([i]))
 
-    if len(checked.values()) != len(set(checked.values())):
-        print(len(checked.values()), len(set(checked.values())))
-        print('dupliakters eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee')
-    if len(users) != len(checked):
-        print('dlugosc cccccccccccccccccccccccccccccccccccccccccccccccccccc')
-    from django.http import HttpResponse
     for i in checked:
         pair = Pairs(user_1=i, user_2=checked[i], shaker=shaker)
-        # pair.save()
+
         try:
             pair.save()
         except Exception as e:
             logger.error(e.__str__())
             return HttpResponse('Shaker już wymieszany')
+
     return render(request, 'shakers.html')
-
-
-@login_required(login_url='gifts_of_all_users')
-def gifts_of_all_users(request, pk):
-    gifts_data = Gift.objects.all()
-
-    return render(request, 'gifts_of_all.html', {'gift': gifts_data})
 
 
 @login_required(login_url='gifts_of_shaked_users')
 def gifts_of_shaked_users(request, pk):
-    print(request.user.id, pk)
     shaked_user = Pairs.objects.filter(user_1=request.user.id).filter(shaker=pk)
-
-    for i in shaked_user:
-        print(i.return_user_2)
-    print(shaked_user[0].user_2)
-
     gifts_data = Gift.objects.filter(author_id=shaked_user[0].user_2)
 
     return render(request, 'gifts_of_shaked_user.html', {'gift': gifts_data})

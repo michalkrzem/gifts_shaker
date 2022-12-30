@@ -60,3 +60,10 @@ class AddPersonToShaker(ModelForm):
     class Meta:
         model = User
         fields = ['username']
+
+
+class ShakersForm(ModelForm):
+
+    class Meta:
+        model = Shaker
+        fields = ['shaker_name', 'owner']

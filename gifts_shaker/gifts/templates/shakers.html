@@ -15,7 +15,6 @@
 					<th scope="col"></th>
 					<th>Nazwa Shakera</th>
 					<th colspan="2"><a class="btn btn-sm btn-info" href="/gifts/new_shaker">Stwórz nowy shaker</a></th>
-
 				</tr>
   			</thead>
 	  <tbody>
@@ -24,11 +23,25 @@
 				<tr>
 					<th scope="row"></th>
 					<td>{{shaker.shaker_name}}</td>
-					<td><a class="btn btn-sm btn-info" href="{% url 'add_person' shaker.id %}">Dodaj osoby</a></td>
-					<td><a class="btn btn-sm btn-info" href="{% url 'shake' shaker.id %}">Zamieszaj</a></td>
-					<td><a class="btn btn-sm btn-info" href="{% url 'gifts_of_all_users' shaker.id %}">Podgląd wszystkich prezentów</a></td>
+					{% if shaker.owner == request.user.id %}
+						<td><a class="btn btn-sm btn-info" href="{% url 'add_person' shaker.id %}">Dodaj osoby</a></td>
+					{% else %}
+						<td></td>
+					{% endif %}
+
+					{% if shaker.owner == request.user.id %}
+						<td><a class="btn btn-sm btn-info" href="{% url 'shake' shaker.id %}">Zamieszaj</a></td>
+					{% else %}
+						<td></td>
+					{% endif %}
+
 					<td><a class="btn btn-sm btn-info" href="{% url 'gifts_of_shaked_users' shaker.id %}">Podgląd prezenty wylosowanej tu osoby</a></td>
-					<td><a class="btn btn-sm btn-danger" href="">Delete</a></td>
+
+					{% if shaker.owner == request.user.id %}
+						<td ><a class="btn btn-sm btn-danger" href="">Delete</a></td>
+					{% else %}
+						<td></td>
+					{% endif %}
 				</tr>
 				{% endfor %}
   </tbody>
