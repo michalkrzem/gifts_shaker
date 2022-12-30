@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django import forms
 from django.forms import inlineformset_factory
 
-from .models import Gift, Invitation
+from .models import Gift, Invitation, Shaker
 
 
 class CreateGift(ModelForm):
@@ -43,3 +43,27 @@ class DeleteInvitation(ModelForm):
     class Meta:
         model = Invitation
         fields = ['email', 'accepted']
+
+
+class CreateShaker(ModelForm):
+
+    class Meta:
+        model = Shaker
+        fields = ['shaker_name']
+
+
+class AddPersonToShaker(ModelForm):
+    user = forms.EmailField(
+        label='Wpisz email'
+    )
+
+    class Meta:
+        model = User
+        fields = ['username']
+
+
+class ShakersForm(ModelForm):
+
+    class Meta:
+        model = Shaker
+        fields = ['shaker_name', 'owner']
