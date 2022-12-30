@@ -7,10 +7,9 @@ from django.http import HttpResponse
 import random
 import itertools
 
-# Create your views here.
 from gifts.models import Gift, Shaker, Invitation, Pairs
 from gifts.forms import CreateGift, CreateInvitation, DeleteInvitation, \
-    DeleteGift, CreateShaker, AddPersonToShaker, ShakersForm
+    DeleteGift, CreateShaker, AddPersonToShaker
 
 
 @login_required(login_url='')
@@ -45,6 +44,7 @@ def update_gift(request, pk):
 
     if request.method == 'POST':
         form = CreateGift(request.POST, instance=gift)
+
         if form.is_valid():
             form.save()
             return redirect('all_gifts')
@@ -59,6 +59,7 @@ def create_gift(request):
 
     if request.method == 'POST':
         form = CreateGift(request.POST)
+
         if form.is_valid():
             gift = form.save(commit=False)
             gift.author_id = author
@@ -77,6 +78,7 @@ def create_invitation(request):
 
     if request.method == 'POST':
         form = CreateInvitation(request.POST)
+
         if form.is_valid():
             invitation = form.save(commit=False)
             invitation.owner = owner
@@ -96,14 +98,12 @@ def invitations(request):
     return render(request, 'invitations.html', {'invitations': invitations_data})
 
 
-# @login_required(login_url='gifts/all_invitations/invitation/delete')
+@login_required(login_url='gifts/all_invitations/invitation/delete')
 def delete_invitation(request, pk):
-    print(pk)
     invitation = Invitation.objects.get(id=pk)
     form = DeleteInvitation(instance=invitation)
 
     if request.method == 'POST':
-        # form = CreateInvitation(request.POST, instance=invitation)
         invitation.delete()
         return redirect('all_invitations')
 
@@ -115,8 +115,7 @@ def delete_invitation(request, pk):
 @login_required(login_url='all_shakers')
 def shakers(request):
     shakers_data = Shaker.objects.filter(user_in_shake=request.user.id).values()
-    for i in shakers_data:
-        print(i)
+
     return render(request, 'shakers.html', {'shakers': shakers_data})
 
 

@@ -34,12 +34,6 @@ class Shaker(models.Model):
     owner = models.IntegerField(null=True)
     user_in_shake = models.ManyToManyField(User)
 
-    # def __str__(self):
-    #     return self.shaker_name
-    #
-    # def get_owner(self):
-    #     return self.owner
-
 
 class Pairs(models.Model):
     user_1 = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_1')

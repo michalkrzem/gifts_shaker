@@ -1,8 +1,6 @@
 from django.forms import ModelForm
-from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django import forms
-from django.forms import inlineformset_factory
 
 from .models import Gift, Invitation, Shaker
 
@@ -18,7 +16,6 @@ class CreateGift(ModelForm):
     class Meta:
         model = Gift
         fields = ['name', 'price', 'link']
-        # fields = '__all__'
 
 
 class DeleteGift(ModelForm):
@@ -60,10 +57,3 @@ class AddPersonToShaker(ModelForm):
     class Meta:
         model = User
         fields = ['username']
-
-
-class ShakersForm(ModelForm):
-
-    class Meta:
-        model = Shaker
-        fields = ['shaker_name', 'owner']
