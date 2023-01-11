@@ -1,0 +1,5 @@
+FROM postgres:13.3
+
+ENV POSTGRES_USER giftshaker2
+ENV POSTGRES_PASSWORD gift123
+ENV POSTGRES_DB giftshaker2
