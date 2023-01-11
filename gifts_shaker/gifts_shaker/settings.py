@@ -24,13 +24,23 @@ print(BASE_DIR)
 env = environ.Env(
        # DEBUG=(bool, False)
 )
+print(os.environ.get("ENV"))
+ENVIRONMENT = os.environ.get("ENV")
+if ENVIRONMENT == "dev":
+    environ.Env.read_env(env_file='/usr/src/app/.env.dev')
+elif ENVIRONMENT == "prod":
+    environ.Env.read_env(env_file='/home/app/web/.env.prod')
+else:
+    print("Missing ENV variable")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # reading .env file
-environ.Env.read_env(env_file='/home/app/web/.env.test')
+#environ.Env.read_env(env_file='/home/app/web/.env.prod')
 #environ.Env.read_env()
+#
+#environ.Env.read_env(env_file='/usr/src/app/.env.dev')
 print(env('DATABASE_URL'))
 print(env.db())
 #environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
