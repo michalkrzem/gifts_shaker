@@ -17,39 +17,16 @@ import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-#BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-print('# # # 3 3 # ' * 150)
-print(BASE_DIR)
-env = environ.Env(
-       # DEBUG=(bool, False)
-)
-print(os.environ.get("ENV"))
-ENVIRONMENT = os.environ.get("ENV")
-if ENVIRONMENT == "dev":
-    environ.Env.read_env(env_file='/usr/src/app/.env.dev')
-elif ENVIRONMENT == "prod":
-    environ.Env.read_env(env_file='/home/app/web/.env.prod')
-else:
-    print("Missing ENV variable")
+env = environ.Env()
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
-# reading .env file
-#environ.Env.read_env(env_file='/home/app/web/.env.prod')
-#environ.Env.read_env()
-#
-#environ.Env.read_env(env_file='/usr/src/app/.env.dev')
-print(env('DATABASE_URL'))
-print(env.db())
-#environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
-
-
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env('SECRET_KEY')
-print(SECRET_KEY)
 # SECURITY WARNING: don't run with debug turned on in production!
+
 DEBUG = env('DEBUG')
 
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
@@ -109,8 +86,7 @@ WSGI_APPLICATION = 'gifts_shaker.wsgi.application'
 
 DATABASES = {
     'default': env.db()
-    }
-
+}
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
 
