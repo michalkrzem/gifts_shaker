@@ -16,7 +16,7 @@ services:
       - ./.env.dev
     volumes:
       - .:/usr/src/app
-    command: python manage.py runserver  0.0.0.0:8080
+    command: bash ./docker-entrypoint.sh
     ports:
       - 8080:8080
     depends_on:
