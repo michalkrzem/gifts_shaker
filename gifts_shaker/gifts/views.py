@@ -185,4 +185,4 @@ def gifts_of_shaked_users(request, pk):
     shaked_user = Pairs.objects.filter(user_1=request.user.id).filter(shaker=pk)
     gifts_data = Gift.objects.filter(author_id=shaked_user[0].user_2)
 
-    return render(request, 'gifts_of_shaked_user.html', {'gift': gifts_data})
+    return render(request, 'gifts_of_shaked_user.html', {'gifts': gifts_data})
