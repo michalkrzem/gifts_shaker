@@ -5,14 +5,14 @@
 ### We have two options:
 
 * [dev version](#dev)
-* [develop version with gunicorn](#prod) 
+* [develop version with gunicorn](#prod)
 
 ### And what should we do
 
 * [ TODO ](#todo)
 
 I have a lot of work to do on this project, but this is the version we can see and work with this app.
-We have a postgres database and a django project packed in docker-compose. I set variables in env files and make them 
+We have a postgres database and a django project packed in docker-compose. I set variables in env files and make them
 available (yes, I know, we don't do this in the real world) hearing to give the possibilities of using this application
 as simple as possible on our computers.
 
@@ -28,7 +28,7 @@ docker-compose -f docker-compose.yml up --build
 <a name="prod"></a>
 ### To run production version
 ```shell
-docker-compose -f docker-compose.prod.yml up --build
+docker-compose -f docker-compose.prod.yaml up --build
 ```
 [Register site](http://127.0.0.1:8000/login/register/)
 
