@@ -34,6 +34,12 @@ docker-compose -f docker-compose.prod.yaml up --build
 
 ##
 
+#### To set local environment and use .env.dev file
+```shell
+set -o allexport; source .env.dev; set +o allexport
+```
+
+
 <a name="todo"></a>
 ### TODO
 
