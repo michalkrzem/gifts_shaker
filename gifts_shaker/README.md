@@ -40,6 +40,15 @@ set -o allexport; source .env.dev; set +o allexport
 ```
 
 
+
+# TESTS
+```shell
+set -o allexport; source .env.dev; set +o allexport
+```
+```shell
+export DJANGO_SETTINGS_MODULE=gifts_shaker.settings
+```
+
 <a name="todo"></a>
 ### TODO
 
