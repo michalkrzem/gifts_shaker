@@ -89,6 +89,9 @@ WSGI_APPLICATION = "gifts_shaker.wsgi.application"
 #         'HOST': 'localhost'
 #     }
 # }
+PASSWORD_HASHERS = [
+    "django.contrib.auth.hashers.MD5PasswordHasher",
+]
 
 DATABASES = {
     "default": {

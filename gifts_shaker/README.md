@@ -49,6 +49,12 @@ set -o allexport; source .env.dev; set +o allexport
 export DJANGO_SETTINGS_MODULE=gifts_shaker.settings
 ```
 
+
+# CONTAINERS
+### Get into postgres container
+```shell
+docker exec -it gifts_shaker-db-1  psql -U giftshaker_dev
+```
 <a name="todo"></a>
 ### TODO
 
