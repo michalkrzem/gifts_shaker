@@ -10,13 +10,13 @@ from login.forms import CreateUserForm
 
 
 # --------------Test Login--------------
-def test_login_correct(client):
+def test_login_correct_address(client):
     response = client.get(reverse("login"))
 
     assert response.status_code == 200
 
 
-def test_login_incorrect_addres(client):
+def test_login_incorrect_address(client):
     response = client.get(f'{reverse("login")}_incorrect')
 
     assert response.status_code == 404
@@ -45,12 +45,11 @@ def test_login_user_post_data(client, username, password, expected):
         password="zaqwsxcde123",
     )
     assert user_model.objects.count() == 1
-
     assert client.login(username=username, password=password) == expected
 
 
 # --------------Test Registration--------------
-def test_register_correct(client):
+def test_register_correct_address(client):
     response = client.get(reverse("register"))
 
     assert response.status_code == 200
@@ -85,21 +84,6 @@ def test_register_user_client_get(client):
     assert response.status_code == 200
 
 
-@pytest.mark.django_db
-def test_register_user_client_post(client):
-    User.objects.create_user("username@gmail.com", "password12345678910")
-
-    user = User.objects.get(username="username@gmail.com")
-    assert (
-        client.login(
-            username="username@gmail.com", password="password12345678910"
-        )
-        == True
-    )
-
-    assert user.username == "username@gmail.com"
-
-
 @pytest.mark.parametrize(
     "username, first_name, last_name, password1, password2, expected",
     [
@@ -107,16 +91,16 @@ def test_register_user_client_post(client):
             "username@gmail.com",
             "Michal",
             "Krzem",
-            "zaqwsxcde123",
-            "zaqwsxcde123",
+            "pasword12345",
+            "pasword12345",
             True,
         ),
         (
             "user_incorrectgmail.com",
             "Michal",
             "Krzem",
-            "zaqwsxcde123",
-            "zaqwsxcde123",
+            "pasword12345",
+            "pasword12345",
             False,
         ),
         (
@@ -150,6 +134,49 @@ def test_register_user_client_post(
         follow=True,
     )
 
-    # assert user_model.objects.count() == 1
     assert User.objects.filter(username=username).exists() == expected
-    # assert response.redirect_chain[-1] == ('/login/login/', 302)
+
+
+@pytest.mark.django_db
+def test_register_user_client_redirect(client):
+    user_model = get_user_model()
+    assert user_model.objects.count() == 0
+
+    response = client.post(
+        path=reverse("register"),
+        data={
+            "username": "username@gmail.com",
+            "first_name": "Michał",
+            "last_name": "Krzem",
+            "password1": "pasword12345",
+            "password2": "pasword12345",
+        },
+        follow=True,
+    )
+    assert user_model.objects.count() == 1
+    assert response.redirect_chain[-1] == ("/login/login/", 302)
+
+
+# --------------Test Logout--------------
+@pytest.mark.django_db
+def test_logout_user_client_redirect(client):
+    username = "username@gmail.com"
+    password = "password12345"
+    user_model = get_user_model()
+
+    assert user_model.objects.count() == 0
+
+    user_model.objects.create_user(
+        username=username,
+        password=password,
+    )
+    assert user_model.objects.count() == 1
+
+    client.login(username=username, password=password)
+
+    response = client.post(
+        path=reverse("logout"),
+        follow=True,
+    )
+
+    assert response.redirect_chain[-1] == ("/login/login/", 302)
