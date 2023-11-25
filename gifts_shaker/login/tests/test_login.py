@@ -5,6 +5,7 @@ from django.test import Client
 from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
 from django.urls import reverse
+from django.views.decorators.csrf import csrf_exempt
 
 from login.forms import CreateUserForm
 
@@ -50,7 +51,7 @@ def test_login_user_post_data(client, username, password, expected):
 
 # --------------Test Registration--------------
 def test_register_correct_address(client):
-    response = client.get(reverse("register"))
+    response = client.get(path=reverse("register"))
 
     assert response.status_code == 200
 
@@ -62,24 +63,9 @@ def test_register_incorrect_address(client):
 
 
 @pytest.mark.django_db
-def test_register_user_client_post(client):
-    response = client.post(
-        path=reverse("register"),
-        data={
-            "username": "username@gmail.com",
-            "first_name": "first_name",
-            "last_name": "last_name",
-            "password1": "password",
-            "password2": "password",
-        },
-    )
-    assert response.status_code == 200
-
-
-@pytest.mark.django_db
 def test_register_user_client_get(client):
-    response = client.post(
-        path="/login/register/",
+    response = client.get(
+        path=reverse("register"),
     )
     assert response.status_code == 200
 
@@ -122,7 +108,7 @@ def test_register_user_client_post(
     user_model = get_user_model()
     assert user_model.objects.count() == 0
 
-    response = client.post(
+    client.post(
         path=reverse("register"),
         data={
             "username": username,

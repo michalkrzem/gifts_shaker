@@ -6,7 +6,6 @@ from django.views.decorators.csrf import csrf_exempt
 from .forms import CreateUserForm
 
 
-@csrf_exempt
 def register_page(request):
     if request.user.is_authenticated:
         return redirect("home")
@@ -25,7 +24,6 @@ def register_page(request):
         return render(request, "register.html", context)
 
 
-@csrf_exempt
 def login_page(request):
     """
     TODO: Set email as a login field - not username
@@ -49,7 +47,6 @@ def login_page(request):
         return render(request, "login.html", context)
 
 
-@csrf_exempt
 def logout_user(request):
     logout(request)
     return redirect("login")

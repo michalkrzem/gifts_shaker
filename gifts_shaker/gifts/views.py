@@ -21,13 +21,14 @@ from gifts.forms import (
 
 @login_required(login_url="")
 def home(request):
+
     return render(request, "home.html")
 
 
 @login_required(login_url="all_gifts")
 def gifts(request):
     gifts_data = Gift.objects.filter(author_id=request.user.id)
-
+    print("sdsdsdsd")
     return render(request, "gifts.html", {"gift": gifts_data})
 
 
@@ -40,7 +41,7 @@ def delete_gift(request, pk):
         gift.delete()
         return redirect("all_gifts")
 
-    context = {"form": form}
+    context = {"form": form, "pk": pk}
     return render(request, "delete_gift.html", context)
 
 
