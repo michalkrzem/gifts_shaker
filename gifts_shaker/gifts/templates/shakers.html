@@ -37,7 +37,10 @@
 					<td><a class="btn btn-sm btn-info" href="{% url 'gifts_of_shaked_users' shaker.id %}">Podgląd prezenty wylosowanej tu osoby</a></td>
 
 					{% if shaker.owner == request.user.id %}
-						<td ><a class="btn btn-sm btn-danger" href="">Delete</a></td>
+						<form method="post" action="{% url 'delete_shaker' shaker.id %}">
+    						{% csrf_token %}
+							<td ><button type="submit" class="btn btn-sm btn-danger">Delete</button></td>
+						</form>
 					{% else %}
 						<td></td>
 					{% endif %}
@@ -51,4 +54,3 @@
 
 
 {% endblock %}
-
