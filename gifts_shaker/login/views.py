@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.views.decorators.csrf import csrf_exempt
 
 from .forms import CreateUserForm
+from gifts.models import Invitation
 
 
 @csrf_exempt
@@ -17,6 +18,11 @@ def register_page(request):
             if form.is_valid():
                 form.save()
                 user = form.cleaned_data.get("username")
+                if Invitation.objects.filter(email=user).exists():
+                    invitation_user = Invitation.objects.get(email=user)
+                    invitation_user.accepted = True
+                    invitation_user.save()
+
                 messages.success(request, "Account was created for " + user)
 
                 return redirect("login")

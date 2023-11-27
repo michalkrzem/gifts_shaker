@@ -3,6 +3,9 @@ from django.contrib.auth.models import User
 from django.db.backends.utils import logger
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
+from django.core.mail import send_mail
+from django.conf import settings
+
 
 import random
 import itertools
@@ -85,12 +88,19 @@ def create_invitation(request):
 
     if request.method == "POST":
         form = CreateInvitation(request.POST)
-
         if form.is_valid():
             invitation = form.save(commit=False)
             invitation.owner = owner
             invitation.save()
+            send_mail(
+                subject="Giftshaker Invitation",
+                message="Zapraszam na stronę rejestracji http://127.0.0.1:8080/login/register/",
+                from_email=settings.EMAIL_HOST_USER,
+                recipient_list=request.POST.getlist("email"),
+            )
             return redirect("all_invitations")
+        else:
+            return HttpResponse("Taki użytkownik już jest zaproszony")
 
     formset = CreateInvitation()
     context = {"form": formset}
@@ -151,12 +161,32 @@ def create_shaker(request):
 
 @login_required(login_url="add_person")
 def add_person_to_shaker(request, pk):
-    form = AddPersonToShaker()
     shaker = Shaker.objects.get(id=pk)
 
     if request.method == "POST":
-        person = User.objects.get(username=request.POST.get("username"))
-        shaker.user_in_shake.add(person)
+        email = request.POST.get("username")
+
+        try:
+            person = User.objects.get(username=email)
+        except User.DoesNotExist:
+            return HttpResponse(
+                "Użytkowik o takim mailu nie jest zarejestrowany. Możesz mu wysłac zaproszenie"
+            )
+
+        if person not in shaker.user_in_shake.all():
+            shaker.user_in_shake.add(person)
+            shaker_owner_username = User.objects.get(id=shaker.owner)
+
+            send_mail(
+                subject="Dodano cię do Shakera",
+                message=f"Zostałeś dodanyc do shakera {shaker.shaker_name} przez {shaker_owner_username}",
+                from_email=settings.EMAIL_HOST_USER,
+                recipient_list=[email],
+            )
+        else:
+            return HttpResponse("Ta osoba już jest w tym shakerze")
+
+    form = AddPersonToShaker()
 
     users = shaker.user_in_shake.all()
     context = {"form": form, "users": users}
@@ -188,7 +218,7 @@ def shake(request, pk):
             logger.error(e.__str__())
             return HttpResponse("Shaker już wymieszany")
 
-    return render(request, "shakers.html")
+    return redirect("gifts_of_shaked_users", pk)
 
 
 @login_required(login_url="gifts_of_shaked_users")
@@ -199,3 +229,10 @@ def gifts_of_shaked_users(request, pk):
     gifts_data = Gift.objects.filter(author_id=shaked_user[0].user_2)
 
     return render(request, "gifts_of_shaked_user.html", {"gifts": gifts_data})
+
+
+@login_required(login_url="delete_shaker")
+def delete_shaker(request, pk):
+    Shaker.objects.filter(id=pk).delete()
+
+    return redirect("all_shakers")

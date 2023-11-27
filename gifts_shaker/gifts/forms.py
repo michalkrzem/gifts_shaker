@@ -6,54 +6,50 @@ from .models import Gift, Invitation, Shaker
 
 
 class CreateGift(ModelForm):
-    name = forms.CharField(
-        label='Nazwa prezentu'
-    )
-    price = forms.DecimalField(
-        label='Podaj cenę'
-    )
+    name = forms.CharField(label="Nazwa prezentu")
+    price = forms.DecimalField(label="Podaj cenę")
 
     class Meta:
         model = Gift
-        fields = ['name', 'price', 'link']
+        fields = ["name", "price", "link"]
 
 
 class DeleteGift(ModelForm):
-
     class Meta:
         model = Gift
-        fields = ['name', 'price', 'link']
+        fields = ["name", "price", "link"]
 
 
 class CreateInvitation(ModelForm):
-    email = forms.EmailField(
-        label='Wpisz email'
-    )
+    email = forms.EmailField(label="Wpisz email")
 
     class Meta:
         model = Invitation
-        fields = ['email']
+        fields = ["email"]
 
 
 class DeleteInvitation(ModelForm):
-
     class Meta:
         model = Invitation
-        fields = ['email', 'accepted']
+        fields = ["email", "accepted"]
 
 
 class CreateShaker(ModelForm):
-
     class Meta:
         model = Shaker
-        fields = ['shaker_name']
+        fields = ["shaker_name"]
 
 
 class AddPersonToShaker(ModelForm):
-    user = forms.EmailField(
-        label='Wpisz email'
+    username = forms.EmailField(
+        max_length=100,
+        required=True,
+        help_text="Wpisz email",
+        widget=forms.TextInput(
+            attrs={"class": "form-control", "placeholder": "Email"}
+        ),
     )
 
     class Meta:
         model = User
-        fields = ['username']
+        fields = ["username"]
