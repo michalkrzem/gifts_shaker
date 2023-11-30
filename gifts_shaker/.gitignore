@@ -1,4 +1,2 @@
 .env.dev
-.env.dev_copy
 .env.prod
-.env.prod_copy
