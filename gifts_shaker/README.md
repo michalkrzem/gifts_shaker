@@ -1,5 +1,5 @@
 # GIFT SHAKER
-
+(Fast modifications to prepare app for my family and Christmas)
 ## Gift Shaker is the app for anyone who wants to shake up emails with friends or family and create an extra gift party
 
 ### We have two options:
