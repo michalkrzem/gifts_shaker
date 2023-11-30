@@ -17,12 +17,11 @@ class Gift(models.Model):
 
 
 class Invitation(models.Model):
-    email = models.EmailField(null=True)
+    email = models.EmailField(unique=True, null=True)
     accepted = models.BooleanField(default=False)
     owner = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-
     )
 
     def __str__(self):
@@ -36,17 +35,19 @@ class Shaker(models.Model):
 
 
 class Pairs(models.Model):
-    user_1 = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_1')
-    user_2 = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_2')
-    shaker = models.ForeignKey(
-        Shaker,
-        on_delete=models.CASCADE
+    user_1 = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="user_1"
     )
+    user_2 = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="user_2"
+    )
+    shaker = models.ForeignKey(Shaker, on_delete=models.CASCADE)
 
     class Meta:
         constraints = [
             models.UniqueConstraint(
-                fields=['user_1', 'shaker'], name='unique_migration_host_combination'
+                fields=["user_1", "shaker"],
+                name="unique_migration_host_combination",
             )
         ]
 
