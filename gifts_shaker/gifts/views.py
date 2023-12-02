@@ -226,9 +226,16 @@ def gifts_of_shaked_users(request, pk):
     shaked_user = Pairs.objects.filter(user_1=request.user.id).filter(
         shaker=pk
     )
-    gifts_data = Gift.objects.filter(author_id=shaked_user[0].user_2)
-
-    return render(request, "gifts_of_shaked_user.html", {"gifts": gifts_data})
+    try:
+        gifts_data = Gift.objects.filter(author_id=shaked_user[0].user_2)
+        shaked_user = shaked_user[0].user_2
+    except:
+        return HttpResponse("Jeszcze nie było losowania. Cierpliwości.")
+    return render(
+        request,
+        "gifts_of_shaked_user.html",
+        {"gifts": gifts_data, "shaked_user": shaked_user},
+    )
 
 
 @login_required(login_url="delete_shaker")
