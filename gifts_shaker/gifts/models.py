@@ -6,7 +6,7 @@ from django.db import models
 class Gift(models.Model):
     name = models.CharField(max_length=50, null=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
-    link = models.URLField()
+    link = models.URLField(None)
     author_id = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -32,6 +32,9 @@ class Shaker(models.Model):
     shaker_name = models.CharField(max_length=50, null=True)
     owner = models.IntegerField(null=True)
     user_in_shake = models.ManyToManyField(User)
+
+    def __str__(self):
+        return f"{self.shaker_name}: {self.owner}"
 
 
 class Pairs(models.Model):
