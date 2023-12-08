@@ -22,19 +22,19 @@ from gifts.forms import (
 )
 
 
-@login_required(login_url="")
+@login_required
 def home(request):
     return render(request, "home.html")
 
 
-@login_required(login_url="all_gifts")
+@login_required
 def gifts(request):
     gifts_data = Gift.objects.filter(author_id=request.user.id)
 
     return render(request, "gifts.html", {"gift": gifts_data})
 
 
-@login_required(login_url="delete_gift")
+@login_required
 def delete_gift(request, pk):
     gift = Gift.objects.get(id=pk)
     form = DeleteGift(instance=gift)
@@ -47,7 +47,7 @@ def delete_gift(request, pk):
     return render(request, "delete_gift.html", context)
 
 
-@login_required(login_url="update_gift")
+@login_required
 def update_gift(request, pk):
     gift = Gift.objects.get(id=pk)
     form = CreateGift(instance=gift)
@@ -63,7 +63,7 @@ def update_gift(request, pk):
     return render(request, "update_gift.html", context)
 
 
-@login_required(login_url="new_gift")
+@login_required
 def create_gift(request):
     author = User.objects.get(id=request.user.id)
 
@@ -82,7 +82,7 @@ def create_gift(request):
     return render(request, "add_gift.html", context)
 
 
-@login_required(login_url="invite")
+@login_required
 def create_invitation(request):
     owner = User.objects.get(id=request.user.id)
 
@@ -92,12 +92,17 @@ def create_invitation(request):
             invitation = form.save(commit=False)
             invitation.owner = owner
             invitation.save()
-            send_mail(
-                subject="Giftshaker Invitation",
-                message="Zapraszam na stronę rejestracji http://127.0.0.1:8080/login/register/",
-                from_email=settings.EMAIL_HOST_USER,
-                recipient_list=request.POST.getlist("email"),
-            )
+
+            try:
+                send_mail(
+                    subject="Giftshaker Invitation",
+                    message="Zapraszam na stronę rejestracji http://127.0.0.1:8080/login/register/",
+                    from_email=settings.EMAIL_HOST_USER,
+                    recipient_list=request.POST.getlist("email"),
+                )
+            except OSError:
+                return HttpResponse("Prawdopodobnie podałeś zły email")
+
             return redirect("all_invitations")
         else:
             return HttpResponse("Taki użytkownik już jest zaproszony")
@@ -108,7 +113,7 @@ def create_invitation(request):
     return render(request, "invite.html", context)
 
 
-@login_required(login_url="all_invitations")
+@login_required
 def invitations(request):
     invitations_data = Invitation.objects.filter(owner=request.user.id)
 
@@ -117,7 +122,7 @@ def invitations(request):
     )
 
 
-@login_required(login_url="gifts/all_invitations/invitation/delete")
+@login_required
 def delete_invitation(request, pk):
     invitation = Invitation.objects.get(id=pk)
     form = DeleteInvitation(instance=invitation)
@@ -131,7 +136,7 @@ def delete_invitation(request, pk):
     return render(request, "delete_invitation.html", context)
 
 
-@login_required(login_url="all_shakers")
+@login_required
 def shakers(request):
     shakers_data = Shaker.objects.filter(
         user_in_shake=request.user.id
@@ -140,7 +145,7 @@ def shakers(request):
     return render(request, "shakers.html", {"shakers": shakers_data})
 
 
-@login_required(login_url="new_shaker")
+@login_required
 def create_shaker(request):
     owner = User.objects.get(id=request.user.id)
 
@@ -159,7 +164,7 @@ def create_shaker(request):
     return render(request, "new_shaker.html", {"form": formset})
 
 
-@login_required(login_url="add_person")
+@login_required
 def add_person_to_shaker(request, pk):
     shaker = Shaker.objects.get(id=pk)
 
@@ -177,12 +182,15 @@ def add_person_to_shaker(request, pk):
             shaker.user_in_shake.add(person)
             shaker_owner_username = User.objects.get(id=shaker.owner)
 
-            send_mail(
-                subject="Dodano cię do Shakera",
-                message=f"Zostałeś dodanyc do shakera {shaker.shaker_name} przez {shaker_owner_username}",
-                from_email=settings.EMAIL_HOST_USER,
-                recipient_list=[email],
-            )
+            try:
+                send_mail(
+                    subject="Dodano cię do Shakera",
+                    message=f"Zostałeś dodanyc do shakera {shaker.shaker_name} przez {shaker_owner_username}",
+                    from_email=settings.EMAIL_HOST_USER,
+                    recipient_list=[email],
+                )
+            except OSError:
+                return HttpResponse("Prawdopodobnie podałeś zły email")
         else:
             return HttpResponse("Ta osoba już jest w tym shakerze")
 
@@ -194,7 +202,7 @@ def add_person_to_shaker(request, pk):
     return render(request, "invite_into_shaker.html", context)
 
 
-@login_required(login_url="shake")
+@login_required
 def shake(request, pk):
     checked = {}
     shaker = Shaker.objects.get(id=pk)
@@ -221,7 +229,7 @@ def shake(request, pk):
     return redirect("gifts_of_shaked_users", pk)
 
 
-@login_required(login_url="gifts_of_shaked_users")
+@login_required
 def gifts_of_shaked_users(request, pk):
     shaked_user = Pairs.objects.filter(user_1=request.user.id).filter(
         shaker=pk
@@ -238,7 +246,7 @@ def gifts_of_shaked_users(request, pk):
     )
 
 
-@login_required(login_url="delete_shaker")
+@login_required
 def delete_shaker(request, pk):
     Shaker.objects.filter(id=pk).delete()
 

@@ -34,7 +34,7 @@
 						<td></td>
 					{% endif %}
 
-					<td><a class="btn btn-sm btn-info" href="{% url 'gifts_of_shaked_users' shaker.id %}">Podgląd prezenty wylosowanej tu osoby</a></td>
+					<td><a class="btn btn-sm btn-info" href="{% url 'gifts_of_shaked_users' shaker.id %}">Podgląd prezentów wylosowanej tu osoby</a></td>
 
 					{% if shaker.owner == request.user.id %}
 						<form method="post" action="{% url 'delete_shaker' shaker.id %}">
