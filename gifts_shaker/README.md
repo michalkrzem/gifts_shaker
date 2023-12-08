@@ -58,9 +58,9 @@ docker exec -it gifts_shaker-db-1  psql -U giftshaker_dev
 <a name="todo"></a>
 ### TODO
 
-+ delete shaker option
+&#x2713; delete shaker option
 + better frontend
-+ permissions to buttons
+&#x2713; permissions to buttons
 + tests
 + to correct docker-compose on production
 + ...
